@@ -1,9 +1,8 @@
 import pygame
-import time 
-import math
 from Globals import Global
-from Tower_UI import TowerUI
-from Towers import  Tower
+from Tower_UI import *
+import Tower_UI
+from Towers import  *
 from button import Button
 pygame.font.init()
 
@@ -12,17 +11,32 @@ pygame.font.init()
 def main():
     run =True
     Global.count=0
-    T_UI= TowerUI()
+    T_UI= TowerUI(50,50)
+    T_Background= TowerUIBackground()
+    Global.TUI_Group.add(T_Background,layer=0)
+    Global.TUI_Group.add(T_UI,layer=5)
+    
     def draw(Towers):
         Global.WINDOW.blit(Global.BG,(0,0))
         Display = Global.FONT.render(f"Score:{Global.Score}",1,"red")
-        T_UI.GameUI()
-        T_UI.draw()
+        
         for t in Towers:
             pygame.draw.rect(Global.WINDOW,'blue',t.get_tower_info())
+        Global.TUI_Group.update()
+        Global.TUI_Group.draw(Global.WINDOW)
+        Mousepos= pygame.mouse.get_pos()
+        for s in Global.TUI_Group:
+            if s.rect.collidepoint(Mousepos):
+                Global.CanPlaceTower=False
+                break
+            else:
+                Global.CanPlaceTower=True
+        
         
         Global.WINDOW.blit(Display,(0,0))
         pygame.display.update()
+
+    
     while run:
         Global.count +=Global.clock.tick(60)
         for t in Global.Towers:
@@ -71,10 +85,10 @@ def Place_Tower(event):
                 Global.Score+=50
                 Global.CanPlaceTower=False
                 break
-        if Global.CanPlaceTower and Global.Score>=100:
+        if Global.CanPlaceTower and Global.TowerBought>=1:
             Mouse_x,Mouse_y= event.pos
-            Tower_temp = Tower(Mouse_x-50,Mouse_y-50,100,100)
-            Global.Score -= 100
+            Tower_temp = Tower(Mouse_x-50,Mouse_y-50,100,100,"Blue")
+            Global.TowerBought-=1
             Global.Towers.append(Tower_temp)
         Global.CanPlaceTower =True
 

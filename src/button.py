@@ -1,7 +1,8 @@
 import pygame
 from Globals import Global
-class Button():
+class Button(pygame.sprite.Sprite):
     def __init__(self,x,y,Scale):
+        super().__init__() 
         self.x= x
         self.y=y
         image= pygame.image.load('/Users/oscardejesus/Documents/GitHub/Tycoon/Images/button.jpeg')
@@ -23,3 +24,5 @@ class Button():
         
         Global.WINDOW.blit(self.image,(self.rect.x,self.rect.y))
         return action
+    def updatePos(self,x,y):
+        self.rect.topleft =(x,y)
