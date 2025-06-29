@@ -4,6 +4,8 @@ from Tower_UI import *
 import Tower_UI
 from Towers import  *
 from button import Button
+from Controls import Place_Tower
+from Controls import HoldingTower
 pygame.font.init()
 
 
@@ -11,17 +13,24 @@ pygame.font.init()
 def main():
     run =True
     Global.count=0
-    T_UI= TowerUI(50,50)
+
+    TUI_x=0
+    for t in range(len(Global.Towers_Info)):
+        TUI_x+=50*(t+1)
+        T_UI= TowerUI(TUI_x,30,Global.Towers_Info[t]["TowerName"])
+        Global.TUI_Group.add(T_UI,layer=5)
+    
     T_Background= TowerUIBackground()
     Global.TUI_Group.add(T_Background,layer=0)
-    Global.TUI_Group.add(T_UI,layer=5)
-    
+
+    #Draws all all assets to main game
     def draw(Towers):
+        Global.CanPlaceTower=True
         Global.WINDOW.blit(Global.BG,(0,0))
         Display = Global.FONT.render(f"Score:{Global.Score}",1,"red")
-        
+        HoldingTower()
         for t in Towers:
-            pygame.draw.rect(Global.WINDOW,'blue',t.get_tower_info())
+            Global.WINDOW.blit(t.get_tower_Draw_info()[0],t.get_tower_Draw_info()[1] )
         Global.TUI_Group.update()
         Global.TUI_Group.draw(Global.WINDOW)
         Mousepos= pygame.mouse.get_pos()
@@ -29,14 +38,13 @@ def main():
             if s.rect.collidepoint(Mousepos):
                 Global.CanPlaceTower=False
                 break
-            else:
-                Global.CanPlaceTower=True
+            
         
         
         Global.WINDOW.blit(Display,(0,0))
         pygame.display.update()
-
-    
+        
+    #Main Game loop
     while run:
         Global.count +=Global.clock.tick(60)
         for t in Global.Towers:
@@ -45,7 +53,6 @@ def main():
             if event.type== pygame.QUIT:
                 run= False
                 break
-            # Tower placement/deletion Check
            
             Place_Tower(event)
                 
@@ -60,39 +67,19 @@ def mainmenu():
         if start_button.draw() ==True:
             run =False
         pygame.display.update()
-    
+    PlayMain= True
     start_button =Button((Global.WINDOW_WIDTH-250)/2,(Global.WINDOW_HEIGHT-150)/2,.5)
     while run:
         for event in pygame.event.get():
             if event.type== pygame.QUIT:
                 run= False
+                PlayMain=False
                 break
-        
+            
         Global.clock.tick(60)
         draw()
-    main()
-
-    
-
-
-def Place_Tower(event):
-    
-    if event.type==pygame.MOUSEBUTTONDOWN and Global.CanPlaceTower:
-        Mouse_x,Mouse_y= event.pos
-        for t in Global.Towers[:]:
-            if t.get_tower_info().collidepoint(Mouse_x,Mouse_y):
-                Global.Towers.remove(t)
-                Global.Score+=50
-                Global.CanPlaceTower=False
-                break
-        if Global.CanPlaceTower and Global.TowerBought>=1:
-            Mouse_x,Mouse_y= event.pos
-            Tower_temp = Tower(Mouse_x-50,Mouse_y-50,100,100,"Blue")
-            Global.TowerBought-=1
-            Global.Towers.append(Tower_temp)
-        Global.CanPlaceTower =True
-
-
+    if PlayMain:
+        main()
 
 
 if __name__ =="__main__":

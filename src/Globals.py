@@ -2,7 +2,7 @@ import pygame
 pygame.font.init()
 
 class Global():
-    Score =100
+    Score =500
     count=0
     WINDOW_WIDTH= 1000
     WINDOW_HEIGHT = 800
@@ -13,5 +13,6 @@ class Global():
     FONT = pygame.font.SysFont("arial",25)
     Towers = []
     CanPlaceTower = True
-    TowerBought=0
-    towers=[{"TowerName":"Blue", "Score": 10,"Time":2000}]
+    TowerBought =[]
+    Towers_Info=[{"TowerName":"Blue", "Score": 10,"Time":2000,"SellValue":100,"Cost":100, "SizeX":100,"SizeY":100,"Image":"Factory.png"},
+                 {"TowerName":"Space", "Score": 20,"Time":1500,"SellValue":150,"Cost":200,"SizeX":100,"SizeY":100,"Image":"space.png"}]
