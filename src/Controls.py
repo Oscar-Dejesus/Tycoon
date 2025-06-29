@@ -27,14 +27,19 @@ def HoldingTower():
         image_path =os.path.normpath(image_path)
         image= pygame.transform.scale(pygame.image.load(image_path),(Global.TowerBought[0]["SizeX"],Global.TowerBought[0]["SizeY"]))
         image.set_alpha(128)
+        image2=pygame.transform.scale(pygame.image.load(image_path),(Global.TowerBought[0]["SizeX"],Global.TowerBought[0]["SizeY"]))
+        image2.set_alpha(128)
         rect =image.get_rect()
         rect.topleft=(Mouse_x-(Global.TowerBought[0]["SizeX"]/2),Mouse_y-(Global.TowerBought[0]["SizeY"]/2))
         Global.WINDOW.blit(image,rect.topleft)
         for t in Global.Towers:
             if t!=rect and rect.colliderect(t.get_tower_Draw_info()[2]):
                 Global.CanPlaceTower=False
+                image2.fill((255, 0, 0, 128))
+                Global.WINDOW.blit(image2,rect.topleft)
             else:
-                Global.CanPlaceTower=True
+                Global.WINDOW.blit(image,rect.topleft)
+
         
 
         

@@ -30,7 +30,7 @@ def main():
         Display = Global.FONT.render(f"Score:{Global.Score}",1,"red")
         HoldingTower()
         for t in Towers:
-            Global.WINDOW.blit(t.get_tower_Draw_info()[0],t.get_tower_Draw_info()[1] )
+            Global.WINDOW.blit(t.get_tower_Draw_info()[0],t.get_tower_Draw_info()[1])
         Global.TUI_Group.update()
         Global.TUI_Group.draw(Global.WINDOW)
         Mousepos= pygame.mouse.get_pos()
@@ -64,22 +64,21 @@ def mainmenu():
     def draw():
         nonlocal run
         Global.WINDOW.fill((0, 212, 255))
+        
         if start_button.draw() ==True:
             run =False
         pygame.display.update()
-    PlayMain= True
     start_button =Button((Global.WINDOW_WIDTH-250)/2,(Global.WINDOW_HEIGHT-150)/2,.5)
     while run:
+        Global.clock.tick(60)
+        draw()
+        if run==False:
+            main() 
         for event in pygame.event.get():
             if event.type== pygame.QUIT:
                 run= False
-                PlayMain=False
                 break
-            
-        Global.clock.tick(60)
-        draw()
-    if PlayMain:
-        main()
+    
 
 
 if __name__ =="__main__":
