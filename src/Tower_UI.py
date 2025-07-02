@@ -51,7 +51,6 @@ class TowerUIBackground(pygame.sprite.Sprite):
     def update(self):
         global Background_Y
         self.rect.topleft=(Background_X,Background_Y)
-        Global.TUI_Group.add(self.close_button,layer=0)
         pressed=self.close_button.draw()
         if pressed == True and not(Background_Y ==Global.WINDOW_HEIGHT):
             Background_Y =Global.WINDOW_HEIGHT

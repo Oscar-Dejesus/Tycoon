@@ -6,31 +6,50 @@ from Towers import  *
 from button import Button
 from Controls import Place_Tower
 from Controls import HoldingTower
+from Core import Core
+from Enemy import Enemy
 pygame.font.init()
 
 
-
+GameState = None
+def MainLoop():
+    global GameState
+    GameState = "menu"
+    while True:
+        if GameState == "menu":
+            mainmenu()  # returns "game" or "quit"
+        elif GameState == "game":
+            main()      # returns "menu" or "quit"
+        elif GameState == "pause":
+            pause()
+        elif GameState == "quit":
+            pygame.quit()
+            break
 def main():
+    # Initializing variables like towers player ect
     run =True
     Global.count=0
-
+    Exit_Button=Button(Global.WINDOW_WIDTH-250,0,.5)
     TUI_x=0
     for t in range(len(Global.Towers_Info)):
-        TUI_x+=50*(t+1)
+        TUI_x=50+(t*150)
         T_UI= TowerUI(TUI_x,30,Global.Towers_Info[t]["TowerName"])
         Global.TUI_Group.add(T_UI,layer=5)
     
     T_Background= TowerUIBackground()
     Global.TUI_Group.add(T_Background,layer=0)
-
+    Player =Core((Global.WINDOW_WIDTH/2)-(100),(Global.WINDOW_HEIGHT/2)-(100),100,100)
+    E1 =Enemy(0,0,50,50)
+    Global.ENEMEY_Group.add(E1)
     #Draws all all assets to main game
     def draw(Towers):
         Global.CanPlaceTower=True
         Global.WINDOW.blit(Global.BG,(0,0))
         Display = Global.FONT.render(f"Score:{Global.Score}",1,"red")
-        HoldingTower()
+        Player.draw()
+        HoldingTower(Player)
         for t in Towers:
-            Global.WINDOW.blit(t.get_tower_Draw_info()[0],t.get_tower_Draw_info()[1])
+            t.drawTower()
         Global.TUI_Group.update()
         Global.TUI_Group.draw(Global.WINDOW)
         Mousepos= pygame.mouse.get_pos()
@@ -38,28 +57,66 @@ def main():
             if s.rect.collidepoint(Mousepos):
                 Global.CanPlaceTower=False
                 break
-            
-        
-        
+        #DRAWS ENEMY NOT IMPLEMENTED YET
+        Global.ENEMEY_Group.update()
+        Global.ENEMEY_Group.draw(Global.WINDOW)
+
         Global.WINDOW.blit(Display,(0,0))
+        if Exit_Button.draw() ==True:
+            return False
         pygame.display.update()
-        
+    
+    global GameState    
+
     #Main Game loop
     while run:
         Global.count +=Global.clock.tick(60)
         for t in Global.Towers:
-            t.Score_Add()
+            t.Tower_Loop()
         for event in pygame.event.get():
             if event.type== pygame.QUIT:
                 run= False
+                GameState ="quit"
                 break
-           
+            if event.type==pygame.KEYDOWN:
+                if event.key== pygame.K_ESCAPE:
+                    draw(Global.Towers)
+                    GameState="pause"
+                    run =False
+                    break
             Place_Tower(event)
                 
-            keys = pygame.key.get_pressed()
-        draw(Global.Towers)
+        if draw(Global.Towers) == False:
+            Global.Towers = []
+            Global.Score=500
+            GameState ="menu"
+            break
+        E1.Enemy_AI(Player)
+    Global.TUI_Group.empty()
+def pause():
+
+    overlay = pygame.Surface(pygame.display.get_window_size(),pygame.SRCALPHA)
+    overlay.fill((128, 128, 128, 128))
+    Text = Global.FONT.render("Paused",True,"red")
+    Global.WINDOW.blit(overlay,(0,0))
+    Global.WINDOW.blit(Text,((Global.WINDOW.get_width()/2)- Text.get_width()/2,(Global.WINDOW.get_height()/2)-Text.get_height()/2))
+    pygame.display.update()
+    global GameState
+    while True:
+        pygame.time.delay(10)
+        for event in pygame.event.get():
+            if event.type== pygame.QUIT:
+                GameState="quit"
+                return
+            if event.type==pygame.KEYDOWN:
+                if event.key== pygame.K_ESCAPE:
+                    GameState="game"
+                    return
+            
+    
 
 def mainmenu():
+    global GameState
     run =True
     def draw():
         nonlocal run
@@ -73,14 +130,14 @@ def mainmenu():
         Global.clock.tick(60)
         draw()
         if run==False:
-            main() 
+            GameState ="game" 
         for event in pygame.event.get():
             if event.type== pygame.QUIT:
                 run= False
+                GameState ="quit"
                 break
-    
 
 
 if __name__ =="__main__":
     pygame.init()
-    mainmenu()
+    MainLoop()
