@@ -9,7 +9,7 @@ class Global():
     TUI_Group = pygame.sprite.LayeredUpdates()
     ENEMEY_Group = pygame.sprite.LayeredUpdates()
     WINDOW = pygame.display.set_mode((WINDOW_WIDTH,WINDOW_HEIGHT),pygame.RESIZABLE | pygame.SCALED)
-    BG = pygame.transform.scale(pygame.image.load("/Users/oscardejesus/Documents/GitHub/Tycoon/Images/SpaceBG.png"), (WINDOW.get_width(),WINDOW.get_height()))
+    BG = pygame.transform.scale(pygame.image.load("/Users/oscardejesus/Documents/GitHub/Tycoon/Tycoon/Images/SpaceBG.png"), (WINDOW.get_width(),WINDOW.get_height()))
     clock = pygame.time.Clock()
     FONT = pygame.font.SysFont("arial", 25)
     Towers = []
