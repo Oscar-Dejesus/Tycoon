@@ -18,7 +18,8 @@ class Tower:
        self.image= pygame.transform.scale(image,(width,height))
        self.rect=self.image.get_rect()
        self.rect.topleft = (x, y) 
-       self.tower_info = (self.image,(x,y),self.rect)
+
+       self.tower_info =self.rect
        self.Max_Health = Global.Towers_Info[self.index]["Health"]
        self.Health = Global.Towers_Info[self.index]["Health"]
        self.x = x
@@ -36,7 +37,7 @@ class Tower:
         else:
             self.StartTime +=10
     def DrawHealth(self):
-        rect =pygame.Rect(self.x,self.y+self.height-20,100 * (self.Health/self.Max_Health),20)
+        rect =pygame.Rect(self.x,self.y+self.height-10,self.width * (self.Health/self.Max_Health),10)
         pygame.draw.rect(Global.WINDOW,(0, 255, 0),rect,border_radius=5)
 
 

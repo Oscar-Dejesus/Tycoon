@@ -8,7 +8,7 @@ def Place_Tower(event):
     if event.type==pygame.MOUSEBUTTONDOWN and Global.CanPlaceTower:
         Mouse_x,Mouse_y= event.pos
         for t in Global.Towers[:]:
-            if t.get_tower_Draw_info()[2].collidepoint(Mouse_x,Mouse_y):
+            if t.get_tower_Draw_info().collidepoint(Mouse_x,Mouse_y):
                 Global.Score+=t.get_tower_info()["SellValue"]
                 Global.Towers.remove(t)
                 Global.CanPlaceTower=False
@@ -33,20 +33,22 @@ def HoldingTower(Core):
         rect =image.get_rect()
         rect.topleft=(Mouse_x-(Global.TowerBought[0]["SizeX"]/2),Mouse_y-(Global.TowerBought[0]["SizeY"]/2))
         Global.WINDOW.blit(image,rect.topleft)
-        if rect.colliderect(Core.get_core_Draw_info()[2]):
+        Mousepos= pygame.mouse.get_pos()
+        for s in Global.TUI_Group:
+            if s.rect.collidepoint(Mousepos):
+                Global.CanPlaceTower=False
+                break
+        if rect.colliderect(Core.get_core_Draw_info()[1]):
             Global.CanPlaceTower=False
+        else:
+            for t in Global.Towers:
+                if t!=rect and rect.colliderect(t.get_tower_Draw_info()):
+                    Global.CanPlaceTower=False
+        if Global.CanPlaceTower==False:
             image2.fill((255, 0, 0, 128))
             Global.WINDOW.blit(image2,rect.topleft)
         else:
-            for t in Global.Towers:
-                if t!=rect and rect.colliderect(t.get_tower_Draw_info()[2]):
-                    Global.CanPlaceTower=False
-                    image2.fill((255, 0, 0, 128))
-                    Global.WINDOW.blit(image2,rect.topleft)
-                else:
-                    Global.WINDOW.blit(image,rect.topleft)
-        
-        
+            Global.WINDOW.blit(image,rect.topleft)
         
 
         

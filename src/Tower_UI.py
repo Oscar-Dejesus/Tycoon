@@ -17,7 +17,7 @@ class TowerUI(pygame.sprite.Sprite):
         image_path = os.path.join(current_path, '..','Images',Global.Towers_Info[self.index]["Image"])
         image_path =os.path.normpath(image_path)
         image= pygame.image.load(image_path)
-        self.image= pygame.transform.scale(image,(Global.Towers_Info[self.index]["SizeX"]*.5,Global.Towers_Info[self.index]["SizeY"]*.5))
+        self.image= pygame.transform.scale(image,(50,50))
         self.rect =self.image.get_rect()
         self.x=x
         self.y=y
@@ -26,7 +26,7 @@ class TowerUI(pygame.sprite.Sprite):
     #Checks to see if players clicked on UI itself 
     def GameUI(self):
         pos = pygame.mouse.get_pos()
-        if self.rect.collidepoint(pos) and pygame.mouse.get_pressed()[0] == 1 and not(self.Clicked) and Global.Score>=100 and len(Global.TowerBought)<1:
+        if self.rect.collidepoint(pos) and pygame.mouse.get_pressed()[0] == 1 and not(self.Clicked) and Global.Score>=Global.Towers_Info[self.index]["Cost"] and len(Global.TowerBought)<1:
             Global.TowerBought.append(Global.Towers_Info[self.index])
             self.Clicked=True
             Global.Score-=Global.Towers_Info[self.index]["Cost"]

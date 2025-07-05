@@ -41,6 +41,7 @@ def main():
     Player =Core((Global.WINDOW_WIDTH/2)-(100),(Global.WINDOW_HEIGHT/2)-(100),100,100)
     E1 =Enemy(0,0,50,50)
     Global.ENEMEY_Group.add(E1)
+
     #Draws all all assets to main game
     def draw(Towers):
         Global.CanPlaceTower=True
@@ -52,15 +53,8 @@ def main():
             t.drawTower()
         Global.TUI_Group.update()
         Global.TUI_Group.draw(Global.WINDOW)
-        Mousepos= pygame.mouse.get_pos()
-        for s in Global.TUI_Group:
-            if s.rect.collidepoint(Mousepos):
-                Global.CanPlaceTower=False
-                break
-        #DRAWS ENEMY NOT IMPLEMENTED YET
         Global.ENEMEY_Group.update()
         Global.ENEMEY_Group.draw(Global.WINDOW)
-
         Global.WINDOW.blit(Display,(0,0))
         if Exit_Button.draw() ==True:
             return False
@@ -85,16 +79,23 @@ def main():
                     run =False
                     break
             Place_Tower(event)
-                
+        for e in Global.ENEMEY_Group:
+            e.Enemy_AI(Player)  
+        Player.check_Health()
         if draw(Global.Towers) == False:
             Global.Towers = []
             Global.Score=500
             GameState ="menu"
             break
-        E1.Enemy_AI(Player)
+        if Global.Game_Over:
+            Global.Towers = []
+            Global.Score=500
+            GameState ="menu"
+            break
     Global.TUI_Group.empty()
-def pause():
+    Global.ENEMEY_Group.empty()
 
+def pause():
     overlay = pygame.Surface(pygame.display.get_window_size(),pygame.SRCALPHA)
     overlay.fill((128, 128, 128, 128))
     Text = Global.FONT.render("Paused",True,"red")
@@ -131,13 +132,12 @@ def mainmenu():
         draw()
         if run==False:
             GameState ="game" 
+            Global.Game_Over = False
         for event in pygame.event.get():
             if event.type== pygame.QUIT:
                 run= False
                 GameState ="quit"
                 break
-
-
 if __name__ =="__main__":
     pygame.init()
     MainLoop()

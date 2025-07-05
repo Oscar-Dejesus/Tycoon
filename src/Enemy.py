@@ -15,6 +15,7 @@ class Enemy(pygame.sprite.Sprite):
         self.y=y
         self.Vision= pygame.Rect(self.x,self.y, width *2, height*2)
         self.Target=None
+        self.health=100
     def Enemy_AI(self,Target):
         
         detected_target = self.Check_Target()
@@ -27,13 +28,13 @@ class Enemy(pygame.sprite.Sprite):
             Target.Health -=.1
             return
         if PointX >self.x:
-            self.x +=1
+            self.x +=4
         elif PointX <self.x:
-            self.x -=1
+            self.x -=4
         if PointY >self.y:
-            self.y +=1
+            self.y +=4
         elif PointY <self.y:
-            self.y -=1
+            self.y -=4
         self.rect.center =(self.x,self.y)
         self.Vision.center = (self.x,self.y)
         
