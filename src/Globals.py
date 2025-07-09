@@ -15,8 +15,8 @@ class Global():
     Towers = []
     CanPlaceTower = True
     TowerBought =[]
-    Towers_Info=[{"TowerName":"Blue", "Score": 10,"Time":2000,"SellValue":100,"Cost":100,"Health":100, "SizeX":100,"SizeY":100,"Image":"Factory.png"},
-                 {"TowerName":"Space", "Score": 20,"Time":1500,"SellValue":150,"Cost":200,"Health":100,"SizeX":100,"SizeY":100,"Image":"space.png"},
-                 {"TowerName":"hello", "Score": 50,"Time":1000,"SellValue":150,"Cost":200,"Health":100,"SizeX":100,"SizeY":100,"Image":"button.jpeg"},]
+    Towers_Info=[{"TowerName":"Blue", "Score": 10,"Time":2000,"SellValue":100,"Cost":100,"Health":100, "SizeX":100,"SizeY":100,"Image":"Factory.png","SpriteSize":(0,0)},
+                 {"TowerName":"Space", "Score": 20,"Time":1500,"SellValue":150,"Cost":200,"Health":100,"SizeX":100,"SizeY":100,"Image":"space.png","SpriteSize":(100,100)},
+                 {"TowerName":"hello", "Score": 50,"Time":1000,"SellValue":150,"Cost":200,"Health":100,"SizeX":100,"SizeY":100,"Image":"button.jpeg","SpriteSize":(100,100)},]
     Enemy_Info=[{"EnemyName":"bad","Health":40,"SizeX":50,"SizeY":50,"Image":"Factory.png"}]
     Game_Over= False

@@ -11,11 +11,15 @@ class Sprites():
         self.Frames= Frames
         self.currentFrame =0
         self.max_width =self.image_loaded.get_width()
+        self.max_height =self.image_loaded.get_height()
         self.last_updated=pygame.time.get_ticks()
         self.frame_Count = 0
-
-        self.width =width
-        self.height = height
+        if width==0 and height == 0:
+            self.width =self.max_width
+            self.height = self.max_height
+        else:
+            self.width =width
+            self.height = height
         self.ScaleX= ScaleX
         self.ScaleY=ScaleY
         self.x=0

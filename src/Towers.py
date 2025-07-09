@@ -1,21 +1,20 @@
 import pygame
 from Globals import Global
 import os
+from Sprites import Sprites
 class Tower:
     index=0
 
-    def __init__(self,x,y,width,height,Name):
+    def __init__(self,x,y,width,height,Name,SpriteSize):
        for i, t in enumerate(Global.Towers_Info):
             if t["TowerName"]==Name:
                 self.index= i
                 break
        self.StartTime = Global.count 
        self.EndTime= Global.count+Global.Towers_Info[self.index]["Time"]
-       current_path = os.path.dirname(__file__) 
-       image_path = os.path.join(current_path, '..','Images',Global.Towers_Info[self.index]["Image"])
-       image_path =os.path.normpath(image_path)
-       image= pygame.image.load(image_path)
-       self.image= pygame.transform.scale(image,(width,height))
+       
+       self.sprite = Sprites(Global.Towers_Info[self.index]["Image"],SpriteSize[0],SpriteSize[1],width,height,5000,0)
+       self.image= self.sprite.get_image()
        self.rect=self.image.get_rect()
        self.rect.topleft = (x, y) 
 
@@ -29,6 +28,8 @@ class Tower:
     def Tower_Loop(self):
         self.Score_Add()
         self.Check_Dead()
+    
+    
     def Score_Add(self):
         if self.StartTime>= self.EndTime:
             self.StartTime= Global.count
@@ -48,6 +49,9 @@ class Tower:
         return Global.Towers_Info[self.index]
         
     def drawTower(self):
+        self.image= self.sprite.get_image()
+        self.rect=self.image.get_rect()
+        self.rect.topleft = (self.x, self.y) 
         Global.WINDOW.blit(self.image,(self.x,self.y))
         self.DrawHealth()
     def get_tower_Draw_info(self):

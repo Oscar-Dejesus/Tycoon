@@ -1,13 +1,14 @@
 import pygame
 from Globals import Global
 from Tower_UI import *
-import Tower_UI
 from Towers import  *
 from button import Button
 from Controls import Place_Tower
 from Controls import HoldingTower
 from Core import Core
-from Enemy import Enemy
+from Waves import Waves
+import random
+
 pygame.font.init()
 
 
@@ -25,6 +26,12 @@ def MainLoop():
         elif GameState == "quit":
             pygame.quit()
             break
+def SpawnEnemy():
+    y = random.randint(0,Global.WINDOW_HEIGHT)
+    x=-100
+    return y
+
+
 def main():
     # Initializing variables like towers player ect
     run =True
@@ -39,9 +46,7 @@ def main():
     T_Background= TowerUIBackground()
     Global.TUI_Group.add(T_Background,layer=0)
     Player =Core((Global.WINDOW_WIDTH/2)-(100),(Global.WINDOW_HEIGHT/2)-(100),100,100)
-    E1 =Enemy(0,0,50,50)
-    Global.ENEMEY_Group.add(E1)
-
+    Waves.WaveStart(1)
     #Draws all all assets to main game
     def draw(Towers):
         Global.CanPlaceTower=True
@@ -51,10 +56,12 @@ def main():
         HoldingTower(Player)
         for t in Towers:
             t.drawTower()
-        Global.TUI_Group.update()
-        Global.TUI_Group.draw(Global.WINDOW)
         Global.ENEMEY_Group.update()
         Global.ENEMEY_Group.draw(Global.WINDOW)
+
+        
+        Global.TUI_Group.update()
+        Global.TUI_Group.draw(Global.WINDOW)
         Global.WINDOW.blit(Display,(0,0))
         if Exit_Button.draw() ==True:
             return False
@@ -138,6 +145,7 @@ def mainmenu():
                 run= False
                 GameState ="quit"
                 break
+
 if __name__ =="__main__":
     pygame.init()
     MainLoop()

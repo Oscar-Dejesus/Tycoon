@@ -15,7 +15,7 @@ def Place_Tower(event):
                 break
         if Global.CanPlaceTower and len(Global.TowerBought)>=1:
             Mouse_x,Mouse_y= event.pos
-            Tower_temp = Tower(Mouse_x-(Global.TowerBought[0]["SizeX"]/2),Mouse_y-(Global.TowerBought[0]["SizeY"]/2),Global.TowerBought[0]["SizeX"],Global.TowerBought[0]["SizeY"],Global.TowerBought[0]["TowerName"])
+            Tower_temp = Tower(Mouse_x-(Global.TowerBought[0]["SizeX"]/2),Mouse_y-(Global.TowerBought[0]["SizeY"]/2),Global.TowerBought[0]["SizeX"],Global.TowerBought[0]["SizeY"],Global.TowerBought[0]["TowerName"],Global.TowerBought[0]["SpriteSize"])
             Global.TowerBought=[]
             Global.Towers.append(Tower_temp)
         Global.CanPlaceTower =True
