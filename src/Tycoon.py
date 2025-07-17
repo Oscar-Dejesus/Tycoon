@@ -7,6 +7,8 @@ from Controls import Place_Tower
 from Controls import HoldingTower
 from Core import Core
 from Waves import Waves
+from Bullets import Bullet
+import math
 import random
 
 pygame.font.init()
@@ -33,6 +35,7 @@ def SpawnEnemy():
 
 
 def main():
+
     # Initializing variables like towers player ect
     run =True
     Global.count=0
@@ -56,12 +59,17 @@ def main():
         HoldingTower(Player)
         for t in Towers:
             t.drawTower()
+
+        #Drawing bullets and enemies
         Global.ENEMEY_Group.update()
         Global.ENEMEY_Group.draw(Global.WINDOW)
-
+        Global.Bullet_Group.update()
+        Global.Bullet_Group.draw(Global.WINDOW)
+        
         
         Global.TUI_Group.update()
         Global.TUI_Group.draw(Global.WINDOW)
+
         Global.WINDOW.blit(Display,(0,0))
         if Exit_Button.draw() ==True:
             return False
@@ -99,8 +107,11 @@ def main():
             Global.Score=500
             GameState ="menu"
             break
+        for b in Global.Bullet_Group:
+            b.Bullet_Loop()
     Global.TUI_Group.empty()
     Global.ENEMEY_Group.empty()
+    Global.Bullet_Group.empty()
 
 def pause():
     overlay = pygame.Surface(pygame.display.get_window_size(),pygame.SRCALPHA)
