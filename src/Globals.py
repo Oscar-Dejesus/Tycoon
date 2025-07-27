@@ -7,6 +7,8 @@ class Global():
     WINDOW_WIDTH= 1500
     WINDOW_HEIGHT = 1000
     TUI_Group = pygame.sprite.LayeredUpdates()
+    Enemies_killed_wave =0
+    Wave_Number=0
     ENEMEY_Group = pygame.sprite.LayeredUpdates()
     WINDOW = pygame.display.set_mode((WINDOW_WIDTH,WINDOW_HEIGHT),pygame.RESIZABLE | pygame.SCALED)
     BG = pygame.transform.scale(pygame.image.load("/Users/oscardejesus/Documents/GitHub/Tycoon/Tycoon/Images/SpaceBG.png"), (WINDOW.get_width(),WINDOW.get_height()))
@@ -22,3 +24,10 @@ class Global():
     Enemy_Info=[{"EnemyName":"bad","Health":40,"SizeX":50,"SizeY":50,"Image":"Factory.png"}]
     Bullet_Group=pygame.sprite.LayeredUpdates()
     Game_Over= False
+    @classmethod
+    def Set_Default_Values(cls):
+        cls.Enemies_killed_wave =0
+        cls.Wave_Number=0
+        cls.TUI_Group.empty()
+        cls.ENEMEY_Group.empty()
+        cls.Bullet_Group.empty()

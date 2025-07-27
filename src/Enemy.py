@@ -3,6 +3,7 @@ import os
 import pygame
 from Sprites import Sprites
 import random
+
 class Enemy(pygame.sprite.Sprite):
     def __init__(self,x,y,name):
         pygame.sprite.Sprite.__init__(self)
@@ -28,10 +29,8 @@ class Enemy(pygame.sprite.Sprite):
         self.health=Global.Enemy_Info[self.index]["Health"]
         self.speed =random.randint(1,4)
     def Enemy_AI(self,Target):
-        if self.health<=0:
-            Global.ENEMEY_Group.remove(self)
-            return
         detected_target = self.Check_Target()
+        self.Check_isDead()
         if not(detected_target==False):
             Target= self.Check_Target()
         
@@ -41,34 +40,29 @@ class Enemy(pygame.sprite.Sprite):
         if self.rect.colliderect(Target.rect):
             Target.Health -=.1
             return
-        if PointX >self.x:
-            for _ in range(self.speed):
-                if PointX <=self.x: 
-                    break
-                self.x +=1
-        if PointX <self.x:
-            for _ in range(self.speed):
-                if PointX >=self.x:
-                    break
-                self.x -=1
-                
-        if PointY >self.y:
-            for _ in range(self.speed):
-                if PointY <=self.y:
-                    break
-                self.y +=1
-                
-        if PointY <self.y:
-            for _ in range(self.speed):
 
-                if PointY >=self.y:
-                    break
-                self.y -=1
-                
+
+        dx = PointX - self.x
+        dy = PointY - self.y
         
+        if dx > 0: 
+            self.x += min(self.speed, dx)
+        elif dx < 0: 
+            self.x += max(-self.speed, dx)
+
+
+        if dy > 0: 
+            self.y += min(self.speed, dy)
+        elif dy < 0: # Target is above
+            self.y += max(-self.speed, dy)
+
         self.rect.center =(self.x,self.y)
         self.Vision.center = (self.x,self.y)
-
+    def Check_isDead(self):
+        if self.health<=0:
+            Global.ENEMEY_Group.remove(self)
+            Global.Enemies_killed_wave+=1
+        
     def Check_Target(self):
         for t in Global.Towers[:]:
             if self.Vision.colliderect(t.rect): 

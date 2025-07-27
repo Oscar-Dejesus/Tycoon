@@ -5,10 +5,10 @@ from Towers import  *
 from button import Button
 from Controls import Place_Tower
 from Controls import HoldingTower
+from Controls import *
 from Core import Core
 from Waves import Waves
-from Bullets import Bullet
-import math
+
 import random
 
 pygame.font.init()
@@ -49,7 +49,7 @@ def main():
     T_Background= TowerUIBackground()
     Global.TUI_Group.add(T_Background,layer=0)
     Player =Core((Global.WINDOW_WIDTH/2)-(100),(Global.WINDOW_HEIGHT/2)-(100),100,100)
-    Waves.WaveStart(1)
+    Waves.intialize()
     #Draws all all assets to main game
     def draw(Towers):
         Global.CanPlaceTower=True
@@ -99,7 +99,7 @@ def main():
         Player.check_Health()
         if draw(Global.Towers) == False:
             Global.Towers = []
-            Global.Score=500
+            Global.Score=500 
             GameState ="menu"
             break
         if Global.Game_Over:
@@ -109,10 +109,8 @@ def main():
             break
         for b in Global.Bullet_Group:
             b.Bullet_Loop()
-    Global.TUI_Group.empty()
-    Global.ENEMEY_Group.empty()
-    Global.Bullet_Group.empty()
-
+        Waves.Wave_Logic()
+    Global.Set_Default_Values()
 def pause():
     overlay = pygame.Surface(pygame.display.get_window_size(),pygame.SRCALPHA)
     overlay.fill((128, 128, 128, 128))

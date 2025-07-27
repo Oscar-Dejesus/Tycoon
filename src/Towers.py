@@ -54,7 +54,7 @@ class Tower:
             self.EndTime= Global.count+Global.Towers_Info[self.index]["Time"]
             return True
         else:
-            self.StartTime +=10
+            self.StartTime =Global.count
 
 
     

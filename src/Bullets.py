@@ -22,10 +22,10 @@ class Bullet(pygame.sprite.Sprite):
         self.BasicMovement(self.direction)
     def BulletCollision(self):
         collisions = pygame.sprite.spritecollide(self, Global.ENEMEY_Group, False)
-
         if collisions:
             collisions[0].health -=1
             Global.Bullet_Group.remove(self)
+            return
 
         
     def BasicMovement(self,radian):

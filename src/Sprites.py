@@ -32,10 +32,12 @@ class Sprites():
         image= self.image_loaded.subsurface((self.width*self.currentFrame,self.y,self.width,self.height))
         t_image= pygame.transform.scale(image,(self.ScaleX,self.ScaleY))
         return t_image
-    def temp_sprite(rect):
+    @classmethod
+    def temp_sprite(self,rect):
         temp = pygame.sprite.Sprite()
         temp.rect = rect
         return temp
+    
     def update(self):
         now = pygame.time.get_ticks()
         if now -self.last_updated> self.Frame_Time:
