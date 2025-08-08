@@ -3,4 +3,5 @@ README.md
 .DS_Store
 tempCodeRunnerFile.py
 src/__pycache__
+.vscode
 .vscode/launch.json

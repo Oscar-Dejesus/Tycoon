@@ -1,23 +1,26 @@
 import pygame
 from Globals import Global
+from  Sprites import Sprites
 import os
 class Button(pygame.sprite.Sprite):
-    def __init__(self,x,y,Scale):
-        current_path = os.path.dirname(__file__) 
-        image_path = os.path.join(current_path, '..','Images','button.jpeg')
-        image_path =os.path.normpath(image_path)
-        super().__init__() 
+    def __init__(self,x,y,width,height):
+        pygame.sprite.Sprite.__init__(self)
+        self.Sprite = Sprites("button.jpeg",0,0,width,height,0,0)
+        self.image = self.Sprite.get_image()
+        self.rect =self.image.get_rect()
+   
+        
         self.x= x
         self.y=y
-        image= pygame.image.load(image_path)
-        width = image.get_width()
-        height =image.get_height()
-        self.image= pygame.transform.scale(image,(int(width *Scale),int(height*Scale)))
-        self.rect = self.image.get_rect()
+        self.width= width
+        self.height = height
         self.rect.topleft =(x,y)
         self.clicked= False
-    
     def draw(self):
+        Global.WINDOW.blit(self.image,(self.rect.x,self.rect.y))
+    def updatePos(self,x,y):
+        self.rect.topleft =(x,y)
+    def check_clicked(self):
         action =False
         pos = pygame.mouse.get_pos()
         if self.rect.collidepoint(pos) and pygame.mouse.get_pressed()[0] ==1 and not(self.clicked):
@@ -25,7 +28,4 @@ class Button(pygame.sprite.Sprite):
             action =True
         if pygame.mouse.get_pressed()[0] ==0:
             self.clicked=False
-        Global.WINDOW.blit(self.image,(self.rect.x,self.rect.y))
         return action
-    def updatePos(self,x,y):
-        self.rect.topleft =(x,y)

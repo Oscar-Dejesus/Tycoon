@@ -1,4 +1,6 @@
 import pygame
+
+
 pygame.font.init()
 
 class Global():
@@ -17,17 +19,22 @@ class Global():
     Towers = []
     CanPlaceTower = True
     TowerBought =[]
-    Towers_Info=[{"TowerName":"Blue","Type":"Money", "Score": 10,"Time":2000,"SellValue":100,"Cost":100,"Health":100, "SizeX":100,"SizeY":100,"Image":"Factory.png","SpriteSize":(0,0)},
-                 {"TowerName":"Space","Type":"Money", "Score": 20,"Time":1500,"SellValue":150,"Cost":200,"Health":100,"SizeX":100,"SizeY":100,"Image":"space.png","SpriteSize":(100,100)},
-                 {"TowerName":"hello","Type":"Bullet","Time":100,"SellValue":150,"Cost":200,"Health":100,"SizeX":100,"SizeY":100,"Image":"Factory.png","SpriteSize":(100,100)}]
-           
+    Towers_Info=[{"TowerName":"Blue",   "Default_Attr":"Score_Add", "Score": 10, "Time":2000, "SellValue":100, "Cost":100, "Health":100, "SizeX":100, "SizeY":100, "Image":"Factory.png", "SpriteSize":(0,0)},
+                 {"TowerName":"Space",  "Default_Attr":"Score_Add", "Score": 20, "Time":1500, "SellValue":150, "Cost":200, "Health":100, "SizeX":100, "SizeY":100, "Image":"space.png",   "SpriteSize":(0,0)},
+                 {"TowerName":"Bullet", "Default_Attr":"regBullet", "Score": 1,  "Time":100,  "SellValue":150, "Cost":200, "Health":100, "SizeX":100, "SizeY":100, "Image":"Factory.png", "SpriteSize":(0,0)}]
+    Tower_upgrades={"Bullet":["fourBullets","Score_Add"]}
+    
     Enemy_Info=[{"EnemyName":"bad","Health":40,"SizeX":50,"SizeY":50,"Image":"Factory.png"}]
     Bullet_Group=pygame.sprite.LayeredUpdates()
     Game_Over= False
+    Tower_clicked= None
     @classmethod
     def Set_Default_Values(cls):
+        cls.Tower_clicked= None
+        cls.Towers = []
         cls.Enemies_killed_wave =0
         cls.Wave_Number=0
-        cls.TUI_Group.empty()
+        cls.Score=500
         cls.ENEMEY_Group.empty()
         cls.Bullet_Group.empty()
+

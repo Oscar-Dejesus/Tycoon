@@ -1,20 +1,22 @@
 import pygame
 from Globals import Global
 from Sprites import Sprites
-from Bullets import Bullet
-import math
+
+from Upgrades import Upgrades
 class Tower:
     index=0
 
-    def __init__(self,x,y,width,height,Name,SpriteSize):
+    def __init__(self,x,y,Name):
        for i, t in enumerate(Global.Towers_Info):
             if t["TowerName"]==Name:
                 self.index= i
                 break
+        
        self.StartTime = Global.count 
        self.EndTime= Global.count+Global.Towers_Info[self.index]["Time"]
-       
-       self.sprite = Sprites(Global.Towers_Info[self.index]["Image"],SpriteSize[0],SpriteSize[1],width,height,5000,0)
+       self.width = Global.Towers_Info[self.index]["SizeX"]
+       self.height = Global.Towers_Info[self.index]["SizeY"]
+       self.sprite = Sprites(Global.Towers_Info[self.index]["Image"],Global.Towers_Info[self.index]["SpriteSize"][0],Global.Towers_Info[self.index]["SpriteSize"][1],self.width,self.height)
        self.image= self.sprite.get_image()
        self.rect=self.image.get_rect()
        self.rect.topleft = (x, y) 
@@ -24,30 +26,32 @@ class Tower:
        self.Health = Global.Towers_Info[self.index]["Health"]
        self.x = x
        self.y =y
-       self.width = width
-       self.height = height
+       self.Name = Name
        self.Vision= pygame.Rect(self.x,self.y, self.width *5, self.height*5)
+       self.Upgrade = Upgrades()
+       self.Upgrade.AddUpgrade(Global.Towers_Info[self.index]["Default_Attr"])
     def Tower_Loop(self):
-
         if self.Timer():
-            if Global.Towers_Info[self.index]["Type"] =="Bullet":
-                self.ShootBullet()
-            else:
-                self.Score_Add()
-        self.Check_Dead()
+            for s in self.Upgrade.Upgrades_list:
+                if hasattr(self.Upgrade, s):
+                    getattr(self.Upgrade, s)(self)
         
+        self.Check_Dead()
+        Mousepos= pygame.mouse.get_pos()
+        UI_Touch=False
+        for s in Global.TUI_Group:
+            if s.rect.collidepoint(Mousepos):
+                UI_Touch =True
+        if self.rect.collidepoint(pygame.mouse.get_pos()) and pygame.event.peek(pygame.MOUSEBUTTONDOWN)and Global.CanPlaceTower==True:
+            Global.Tower_clicked=self
+        elif pygame.event.peek(pygame.MOUSEBUTTONDOWN) and Global.Tower_clicked==self and UI_Touch==False:
+            Global.Tower_clicked=None
+                
+    def getUpgradeObj(self):
+        return self.Upgrade
     
-    def Score_Add(self):
-            Global.Score+=Global.Towers_Info[self.index]["Score"]
-    def ShootBullet(self):
-        t= Sprites.temp_sprite(self.Vision)
-        enemy =  pygame.sprite.spritecollideany(t,Global.ENEMEY_Group)
-        if enemy:
-            angle_radians = math.atan2(self.rect.centery - enemy.rect.centery, enemy.rect.centerx - self.rect.centerx)
-            B = Bullet(self.rect.centerx ,self.rect.centery,10,10,4,angle_radians,"Bullet.png")
-            Global.Bullet_Group.add(B)
-    
-
+    def addUpgrade(self,UpgradeName):
+        self.Upgrade.AddUpgrade(UpgradeName)
     def Timer(self):
         if self.StartTime>= self.EndTime:
             self.StartTime= Global.count
@@ -55,18 +59,12 @@ class Tower:
             return True
         else:
             self.StartTime =Global.count
-
-
-    
-    
     def DrawHealth(self):
         rect =pygame.Rect(self.x,self.y+self.height-10,self.width * (self.Health/self.Max_Health),10)
         pygame.draw.rect(Global.WINDOW,(0, 255, 0),rect,border_radius=5)
     def Check_Dead(self):
         if self.Health <=0:
             Global.Towers.remove(self)
-
-
     def get_tower_info(self):
         return Global.Towers_Info[self.index]
     def drawTower(self):
@@ -78,3 +76,5 @@ class Tower:
         self.DrawHealth()
     def get_tower_Draw_info(self):
         return self.tower_info
+    
+

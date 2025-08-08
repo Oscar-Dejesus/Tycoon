@@ -12,44 +12,49 @@ from Waves import Waves
 import random
 
 pygame.font.init()
-
-
+Player =Core((Global.WINDOW_WIDTH/2)-(100),(Global.WINDOW_HEIGHT/2)-(100),100,100)
 GameState = None
 def MainLoop():
     global GameState
+    global Player 
     GameState = "menu"
+    Waves.intialize()
+    Global.count=0
+    
+    
     while True:
         if GameState == "menu":
             mainmenu()  # returns "game" or "quit"
+            Global.Set_Default_Values()
+            Waves.DefaultValues()
+            Player =Core((Global.WINDOW_WIDTH/2)-(100),(Global.WINDOW_HEIGHT/2)-(100),100,100)
+            Waves.intialize()
         elif GameState == "game":
             main()      # returns "menu" or "quit"
+            Global.TUI_Group.empty()
         elif GameState == "pause":
             pause()
         elif GameState == "quit":
             pygame.quit()
             break
-def SpawnEnemy():
-    y = random.randint(0,Global.WINDOW_HEIGHT)
-    x=-100
-    return y
+
 
 
 def main():
 
     # Initializing variables like towers player ect
     run =True
-    Global.count=0
-    Exit_Button=Button(Global.WINDOW_WIDTH-250,0,.5)
+    
     TUI_x=0
     for t in range(len(Global.Towers_Info)):
         TUI_x=50+(t*150)
         T_UI= TowerUI(TUI_x,30,Global.Towers_Info[t]["TowerName"])
         Global.TUI_Group.add(T_UI,layer=5)
-    
+
     T_Background= TowerUIBackground()
+    
     Global.TUI_Group.add(T_Background,layer=0)
-    Player =Core((Global.WINDOW_WIDTH/2)-(100),(Global.WINDOW_HEIGHT/2)-(100),100,100)
-    Waves.intialize()
+    Global.TUI_Group.add(UpgradeUI())
     #Draws all all assets to main game
     def draw(Towers):
         Global.CanPlaceTower=True
@@ -69,10 +74,11 @@ def main():
         
         Global.TUI_Group.update()
         Global.TUI_Group.draw(Global.WINDOW)
+        for sprite in Global.TUI_Group:
+            sprite.Draw_Overlay()
+        
 
         Global.WINDOW.blit(Display,(0,0))
-        if Exit_Button.draw() ==True:
-            return False
         pygame.display.update()
     
     global GameState    
@@ -97,11 +103,8 @@ def main():
         for e in Global.ENEMEY_Group:
             e.Enemy_AI(Player)  
         Player.check_Health()
-        if draw(Global.Towers) == False:
-            Global.Towers = []
-            Global.Score=500 
-            GameState ="menu"
-            break
+
+        draw(Global.Towers)
         if Global.Game_Over:
             Global.Towers = []
             Global.Score=500
@@ -110,17 +113,21 @@ def main():
         for b in Global.Bullet_Group:
             b.Bullet_Loop()
         Waves.Wave_Logic()
-    Global.Set_Default_Values()
+    
 def pause():
     overlay = pygame.Surface(pygame.display.get_window_size(),pygame.SRCALPHA)
     overlay.fill((128, 128, 128, 128))
     Text = Global.FONT.render("Paused",True,"red")
+    Exit_Button=Button(10,0,100,50)
     Global.WINDOW.blit(overlay,(0,0))
     Global.WINDOW.blit(Text,((Global.WINDOW.get_width()/2)- Text.get_width()/2,(Global.WINDOW.get_height()/2)-Text.get_height()/2))
+    Exit_Button.draw()
     pygame.display.update()
     global GameState
     while True:
-        pygame.time.delay(10)
+        if Exit_Button.check_clicked() ==True:
+            GameState="menu"
+            return
         for event in pygame.event.get():
             if event.type== pygame.QUIT:
                 GameState="quit"
@@ -139,13 +146,15 @@ def mainmenu():
         nonlocal run
         Global.WINDOW.fill((0, 212, 255))
         
-        if start_button.draw() ==True:
-            run =False
+        start_button.draw()
         pygame.display.update()
-    start_button =Button((Global.WINDOW_WIDTH-250)/2,(Global.WINDOW_HEIGHT-150)/2,.5)
+    start_button =Button((Global.WINDOW_WIDTH-250)/2,(Global.WINDOW_HEIGHT-150)/2,200,100)
     while run:
+
         Global.clock.tick(60)
         draw()
+        if start_button.check_clicked() ==True:
+            run =False
         if run==False:
             GameState ="game" 
             Global.Game_Over = False

@@ -7,18 +7,12 @@ import os
 def Place_Tower(event):
     if event.type==pygame.MOUSEBUTTONDOWN and Global.CanPlaceTower:
         Mouse_x,Mouse_y= event.pos
-        for t in Global.Towers[:]:
-            if t.get_tower_Draw_info().collidepoint(Mouse_x,Mouse_y):
-                Global.Score+=t.get_tower_info()["SellValue"]
-                Global.Towers.remove(t)
-                Global.CanPlaceTower=False
-                break
         if Global.CanPlaceTower and len(Global.TowerBought)>=1:
             Mouse_x,Mouse_y= event.pos
-            Tower_temp = Tower(Mouse_x-(Global.TowerBought[0]["SizeX"]/2),Mouse_y-(Global.TowerBought[0]["SizeY"]/2),Global.TowerBought[0]["SizeX"],Global.TowerBought[0]["SizeY"],Global.TowerBought[0]["TowerName"],Global.TowerBought[0]["SpriteSize"])
+            Tower_temp = Tower(Mouse_x-(Global.TowerBought[0]["SizeX"]/2),Mouse_y-(Global.TowerBought[0]["SizeY"]/2),Global.TowerBought[0]["TowerName"])
             Global.TowerBought=[]
             Global.Towers.append(Tower_temp)
-        Global.CanPlaceTower =True
+
 
 def HoldingTower(Core):
     if len(Global.TowerBought)>0:

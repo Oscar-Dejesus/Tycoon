@@ -15,7 +15,7 @@ class Enemy(pygame.sprite.Sprite):
 
         self.width = Global.Enemy_Info[self.index]["SizeX"]
         self.height= Global.Enemy_Info[self.index]["SizeY"]
-        self.sprite =Sprites(Global.Enemy_Info[self.index]["Image"],0,0,self.width,self.height,5000,0)
+        self.sprite =Sprites(Global.Enemy_Info[self.index]["Image"],0,0,self.width,self.height)
         
         self.image = self.sprite.get_image()
 
@@ -58,6 +58,7 @@ class Enemy(pygame.sprite.Sprite):
 
         self.rect.center =(self.x,self.y)
         self.Vision.center = (self.x,self.y)
+
     def Check_isDead(self):
         if self.health<=0:
             Global.ENEMEY_Group.remove(self)
