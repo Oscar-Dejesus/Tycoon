@@ -17,9 +17,12 @@ class Tower:
        self.width = Global.Towers_Info[self.index]["SizeX"]
        self.height = Global.Towers_Info[self.index]["SizeY"]
        self.sprite = Sprites(Global.Towers_Info[self.index]["Image"],Global.Towers_Info[self.index]["SpriteSize"][0],Global.Towers_Info[self.index]["SpriteSize"][1],self.width,self.height)
+      
        self.image= self.sprite.get_image()
        self.rect=self.image.get_rect()
        self.rect.topleft = (x, y) 
+       
+       self.UpgradeIndex=0
 
        self.tower_info =self.rect
        self.Max_Health = Global.Towers_Info[self.index]["Health"]
@@ -27,6 +30,8 @@ class Tower:
        self.x = x
        self.y =y
        self.Name = Name
+
+
        self.Vision= pygame.Rect(self.x,self.y, self.width *5, self.height*5)
        self.Upgrade = Upgrades()
        self.Upgrade.AddUpgrade(Global.Towers_Info[self.index]["Default_Attr"])
@@ -60,13 +65,13 @@ class Tower:
         else:
             self.StartTime =Global.count
     def DrawHealth(self):
-        rect =pygame.Rect(self.x,self.y+self.height-10,self.width * (self.Health/self.Max_Health),10)
+        rect =pygame.Rect(self.x,self.y+self.height-5,self.width * (self.Health/self.Max_Health),5)
         pygame.draw.rect(Global.WINDOW,(0, 255, 0),rect,border_radius=5)
     def Check_Dead(self):
         if self.Health <=0:
             Global.Towers.remove(self)
-    def get_tower_info(self):
-        return Global.Towers_Info[self.index]
+
+    
     def drawTower(self):
         self.image= self.sprite.get_image()
         self.rect=self.image.get_rect()
@@ -74,6 +79,9 @@ class Tower:
         self.Vision.center = (self.x,self.y)
         Global.WINDOW.blit(self.image,(self.x,self.y))
         self.DrawHealth()
+        
+    def get_tower_info(self):
+        return Global.Towers_Info[self.index]
     def get_tower_Draw_info(self):
         return self.tower_info
     

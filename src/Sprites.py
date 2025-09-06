@@ -2,7 +2,7 @@ import pygame
 import os
 
 class Sprites():
-    def __init__(self,image,image_width=0,image_height=0,ScaleX=0,ScaleY=0,Frame_Time=0,Frames=0,):
+    def __init__(self,image,image_width=0,image_height=0,ScaleX=0,ScaleY=0,Frame_Time=0,Frames=0):
         current_path = os.path.dirname(__file__) 
         self.image_path = os.path.join(current_path, '..','Images',image)
         self.image_path =os.path.normpath(self.image_path)

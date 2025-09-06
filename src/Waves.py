@@ -3,7 +3,7 @@ import random
 from Globals import Global
 from Enemy import Enemy
 class Waves:
-    Waves= [{"Wave":1,"Bad":2,"Time":5000},{"Wave":-1}]
+    Waves= [{"Wave":1,"Zombie":2,"Time":5000},{"Wave":-1}]
     Current_Wave=[]
     StartTime = None
     EndTime= None
@@ -13,11 +13,8 @@ class Waves:
 
     @classmethod
     def SpawnEnemy(cls,name,num):
-
         for _ in range(num):
-
             x, y = random.choice([(-100, random.randint(0, Global.WINDOW_HEIGHT)),(Global.WINDOW_WIDTH + 100, random.randint(0, Global.WINDOW_HEIGHT)),(random.randint(0,Global.WINDOW_WIDTH),-100),(random.randint(0,Global.WINDOW_WIDTH),Global.WINDOW_HEIGHT +100)])
-            
             E1 =Enemy(x,y,name)
             Global.ENEMEY_Group.add(E1)
     @classmethod
@@ -35,7 +32,7 @@ class Waves:
             Global.Wave_Number+=1
             cls.WaveStart(Global.Wave_Number)
 
-        elif Global.Enemies_killed_wave>=cls.Current_Wave["Bad"]:
+        elif Global.Enemies_killed_wave>=cls.Current_Wave[list(cls.Current_Wave.keys())[1]]:
             Global.Wave_Number+=1
             Global.Enemies_killed_wave=0
             cls.nextwave =True

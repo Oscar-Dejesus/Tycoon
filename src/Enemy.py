@@ -27,8 +27,22 @@ class Enemy(pygame.sprite.Sprite):
         self.Vision= pygame.Rect(self.x,self.y, self.width *3, self.height*3)
         self.Target=None
         self.health=Global.Enemy_Info[self.index]["Health"]
-        self.speed =random.randint(1,4)
+        self.speed =Global.Enemy_Info[self.index]["Speed"]
+        self.name= name
+        self.AIs = {"Zombie":self.Zombie}
     def Enemy_AI(self,Target):
+        self.AIs[self.name](Target)
+    def Check_isDead(self):
+        if self.health<=0:
+            Global.ENEMEY_Group.remove(self)
+            Global.Enemies_killed_wave+=1
+        
+    def Check_Target(self):
+        for t in Global.Towers[:]:
+            if self.Vision.colliderect(t.rect): 
+                return t
+        return False
+    def Zombie(self,Target):
         detected_target = self.Check_Target()
         self.Check_isDead()
         if not(detected_target==False):
@@ -59,18 +73,8 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.center =(self.x,self.y)
         self.Vision.center = (self.x,self.y)
 
-    def Check_isDead(self):
-        if self.health<=0:
-            Global.ENEMEY_Group.remove(self)
-            Global.Enemies_killed_wave+=1
-        
-    def Check_Target(self):
-        for t in Global.Towers[:]:
-            if self.Vision.colliderect(t.rect): 
-                return t
-        return False
-    
-        
+       
+
     
             
 

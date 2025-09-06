@@ -55,32 +55,54 @@ class UpgradeUI(pygame.sprite.Sprite):
         self.Sell_Button = Button(self.x-50,self.y,100,50)
         self.Upgrade_Button1= Button(self.x+10,self.y+100,self.width-10,self.height/2-100)
         self.Upgrade_Button2= Button(self.x +10,self.y+self.height/2,self.width-10,self.height/2-100)
-        self.upgradeindex=0
+
     def update(self):
-
-        if self.Sell_Button.check_clicked():
-                Global.Score+=Global.Tower_clicked.get_tower_info()["SellValue"]
-                Global.Towers.remove(Global.Tower_clicked)
-                Global.Tower_clicked=None
-        if self.Upgrades:
-            if self.Upgrade_Button1.check_clicked():
-                Global.Tower_clicked.addUpgrade(self.Upgrades[self.upgradeindex])
-            if self.Upgrade_Button2.check_clicked():
-                Global.Tower_clicked.addUpgrade(self.Upgrades[self.upgradeindex+1])
-
-
         if Global.Tower_clicked!= None:
 
             self.Upgrades = Global.Tower_upgrades.get(Global.Tower_clicked.Name)
             self.rect.topleft=(self.x,0)
+
         else:
             self.rect.topleft=(self.x+self.width,0)
+            return
+        if self.Sell_Button.check_clicked():
+                Global.Score+=Global.Tower_clicked.get_tower_info()["SellValue"]
+                Global.Towers.remove(Global.Tower_clicked)
+                Global.Tower_clicked=None
+                return
+        if  len(self.Upgrades)-1<=Global.Tower_clicked.UpgradeIndex or Global.Tower_clicked.UpgradeIndex==-1:
+            self.Upgrade_Button1.setText("No More Upgrades")
+            self.Upgrade_Button2.setText("No More Upgrades")
+            Global.Tower_clicked.UpgradeIndex=-1
+            return
+        
 
+        if self.Upgrades and Global.Tower_clicked.UpgradeIndex>=0:
+            key1 = list(self.Upgrades[Global.Tower_clicked.UpgradeIndex].keys())[0]
+            key2 =list(self.Upgrades[Global.Tower_clicked.UpgradeIndex + 1].keys())[0]
+            self.Upgrade_Button1.setText(key1)
+            self.Upgrade_Button2.setText(key2)
+            
+            if self.Upgrade_Button1.check_clicked() and Global.Score>=self.Upgrades[Global.Tower_clicked.UpgradeIndex].get(key1):
+                Global.Score-=self.Upgrades[Global.Tower_clicked.UpgradeIndex].get(key1)
+                Global.Tower_clicked.addUpgrade(key1)
+                Global.Tower_clicked.UpgradeIndex+=2
+
+            if self.Upgrade_Button2.check_clicked()and Global.Score>=self.Upgrades[Global.Tower_clicked.UpgradeIndex + 1].get(key2):
+                Global.Score-=self.Upgrades[Global.Tower_clicked.UpgradeIndex+1].get(key2)
+                Global.Tower_clicked.addUpgrade(key2)
+                Global.Tower_clicked.UpgradeIndex+=2
+                
+        
+
+
+        
+
+        
     def Draw_Overlay(self):
         self.Sell_Button.updatePos(self.rect.x+5,self.rect.y+5)
         self.Upgrade_Button1.updatePos(self.rect.x+10,self.rect.y+100)
         self.Upgrade_Button2.updatePos(self.rect.x+10,self.y+self.height/2+100)
-
         self.Sell_Button.draw()
         self.Upgrade_Button1.draw()
         self.Upgrade_Button2.draw()
@@ -96,7 +118,7 @@ class TowerUIBackground(pygame.sprite.Sprite):
         self.image.fill('green')
         self.rect =self.image.get_rect()
         self.rect.topleft=(Background_X,Background_Y)
-        self.close_button=Button(Background_X,Background_Y-20,50,20)
+        self.close_button=Button(Background_X,Background_Y-100,100,100,"","Arrow_Down.png")
         
     # handles button logic and draws iself in background
     def update(self):
@@ -106,9 +128,11 @@ class TowerUIBackground(pygame.sprite.Sprite):
         pressed=self.close_button.check_clicked()
         if pressed == True and not(Background_Y ==Global.WINDOW_HEIGHT):
             Background_Y =Global.WINDOW_HEIGHT
-            self.close_button.updatePos(Background_X,Background_Y-20)
+            self.close_button.updatePos(Background_X,Background_Y-100)
+            self.close_button.updateImage("Arrow_Up.png")
         elif pressed:
             Background_Y =Global.WINDOW_HEIGHT-200
-            self.close_button.updatePos(Background_X,Background_Y-20)
+            self.close_button.updatePos(Background_X,Background_Y-100)
+            self.close_button.updateImage("Arrow_Down.png")
     def Draw_Overlay(self):
         pass

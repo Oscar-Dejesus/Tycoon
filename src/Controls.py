@@ -28,16 +28,18 @@ def HoldingTower(Core):
         rect.topleft=(Mouse_x-(Global.TowerBought[0]["SizeX"]/2),Mouse_y-(Global.TowerBought[0]["SizeY"]/2))
         Global.WINDOW.blit(image,rect.topleft)
         Mousepos= pygame.mouse.get_pos()
-        for s in Global.TUI_Group:
-            if s.rect.collidepoint(Mousepos):
-                Global.CanPlaceTower=False
-                break
+
         if rect.colliderect(Core.get_core_Draw_info()[1]):
             Global.CanPlaceTower=False
         else:
             for t in Global.Towers:
                 if t!=rect and rect.colliderect(t.get_tower_Draw_info()):
                     Global.CanPlaceTower=False
+            for s in Global.TUI_Group:
+                if s.rect.collidepoint(Mousepos):
+                    Global.CanPlaceTower=False
+                    break
+            
         if Global.CanPlaceTower==False:
             image2.fill((255, 0, 0, 128))
             Global.WINDOW.blit(image2,rect.topleft)
